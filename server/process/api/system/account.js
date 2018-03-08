@@ -49,20 +49,22 @@ module.exports = ( router ) => {
 		}
 		let url = `https://api.weixin.qq.com/sns/jscode2session?appid=wxc322fe742afc756b&secret=b0bb57153552e5b3144e7b71ffbecf90&js_code=${this.params.code}&grant_type=authorization_code`;
 		
-		request(url, (err, res, body) => {
-			if(err){
-				this.body = {
-					result : err,
-					res : {
-						status : false
-					}
-				};
-				return;	
-			}
-
-			this.body = body;
-			return;
-		});		
+		yield new Promise(function(resolve, reject) {
+			request(url, (err, res, body) => {
+				if(err){
+					this.body = {
+						result : err,
+						res : {
+							status : false
+						}
+					};
+					resolve();	
+				}
+	
+				this.body = body;
+				resolve();
+			});	
+		});	
 	})
 	.get('/account/logout', function *() {
 		this.session.userid = null;
