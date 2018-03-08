@@ -61,49 +61,66 @@ module.exports = ( router ) => {
 					};
 					resolve();	
 				}
+				try {
+					body = JSON.parse(body)
+					if(body.openid) {
+						getThroughDataProc('db', 'query', {
+							_key: 'userinfo',
+							openid: body.openid
+						})
+						.then((result) => {
+							let hasResult = (result.list && result.list.length);
+							let user = null;
+							if(hasResult && result.list[0]){
+								user = result.list[0];
+								that.session.userid = user._id;
+								that.session.openid = user.openid;
+								that.body = user;
+								resolve();				
+							}else{
+								user = {
+									tel: '',
+									gender:	'男',
+									relation: '',
+									nickname: '',
+									birth:	'2010-01-01',
+									wxname:	'',
+									openid:	body.openid,
+									userdata:	''								
+								};
 
-				if(body.openid) {
-					getThroughDataProc('db', 'query', {
-						_key: 'userinfo',
-						openid: body.openid
-					})
-					.then((result) => {
-						let hasResult = (result.list && result.list.length);
-						let user = null;
-						if(hasResult && result.list[0]){
-							user = result.list[0];
-							this.session.userid = user._id;
-							this.session.openid = user.openid;
-							this.body = user;				
-						}else{
-							user = {
-								tel: '',
-								gender:	'男',
-								relation: '',
-								nickname: '',
-								birth:	'2010-01-01',
-								wxname:	'',
-								openid:	body.openid,
-								userdata:	''								
-							};
-							return getThroughDataProc('db', 'save', {
-								_key: 'custom',
-								_save: [user]
-							})
-							.then(() => (this.body = user));
-						}
-					})
-					.catch((err) => {
-						console.log(`[error] ${err.message}\n${err.stack}`)
-						this.body = {
+								return getThroughDataProc('db', 'save', {
+									_key: 'custom',
+									_save: [user]
+								})
+								.then(() => {
+									that.body = user;
+									resolve();
+								});
+							}
+						})
+						.catch((err) => {
+							console.log(`[error] ${err.message}\n${err.stack}`)
+							that.body = {
+								code: -1,
+								desc: `[error] ${err.message}\n${err.stack}`
+							};	
+							resolve();		
+						});					
+					} else {
+						that.body = {
 							code: -1,
-							desc: `[error] ${err.message}\n${err.stack}`
-						};			
-					});					
+							desc: 'no data from server'
+						};
+						resolve();
+					}
+				} catch (e) {
+					that.body = {
+						code: -1,
+						desc: 'invaild data from server'
+					};
+					resolve();
 				}
-
-				that.body = body;
-				resolve();
 			});	
 		});	
 	})
