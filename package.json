@@ -4,12 +4,12 @@
   "description": "nxapi",
   "main": "product/app/luanch.js",
   "scripts": {
-    "start": "gulp && pm2 kill && npm run data && npm run api && pm2 logs",
-    "api": "pm2 start product/server/launcher.js -- api",
-    "web": "pm2 start product/server/launcher.js -- web",
-    "data": "pm2 start product/server/launcher.js -- data",
-    "allup": "gulp && pm2 kill && npm run data && npm run api && pm2 logs",
-    "stop": "pm2 kill"
+    "start": "node_modules/.bin/gulp && node_modules/.bin/pm2 kill && npm run data && npm run api && node_modules/.bin/pm2 logs",
+    "api": "node_modules/.bin/pm2 start product/server/launcher.js -- api",
+    "web": "node_modules/.bin/pm2 start product/server/launcher.js -- web",
+    "data": "node_modules/.bin/pm2 start product/server/launcher.js -- data",
+    "allup": "node_modules/.bin/gulp && node_modules/.bin/pm2 kill && npm run data && npm run api && node_modules/.bin/pm2 logs",
+    "stop": "node_modules/.bin/pm2 kill"
   },
   "keywords": [
     "nxapi"
@@ -18,7 +18,7 @@
   "dependencies": {
     "axon": "2.0.2",
     "babel": "^5.0.0",
-    "babel-core": "5.0.0",
+    "babel-core": "6.0.0",
     "babel-polyfill": "6.5.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.2.0",
