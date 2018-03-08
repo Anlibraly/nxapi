@@ -5,7 +5,7 @@ exports.servers = {
 	    "name"        		: "data",
     	"script"      		: "product/server/process/data/master.js",
         "log_date_format"   : "YYYY-MM-DD HH:mm:ss",
-    	"exec_mode"			: "cluster",
+    	"exec_mode"			: "fork",
     	"instances"			: 1,
 	    "out_file"  		: "./logs/data_out.log",
 	    "error_file"   		: "./logs/data_err.log",
@@ -15,7 +15,7 @@ exports.servers = {
 		"name"        		: "api",
     	"script"      		: "./product/server/process/api/master.js",
         "log_date_format"   : "YYYY-MM-DD HH:mm:ss",
-    	"exec_mode"			: "cluster",
+    	"exec_mode"			: "fork",
     	"instances"			: 1,
 	    "out_file"  		: "./logs/api_out.log",
 	    "error_file"   		: "./logs/api_err.log",
@@ -26,7 +26,7 @@ exports.servers = {
 		"name"        		: "web",
     	"script"      		: "./product/server/process/web/master.js",
         "log_date_format"   : "YYYY-MM-DD HH:mm:ss",
-    	"exec_mode"			: "cluster",
+    	"exec_mode"			: "fork",
     	"instances"			: 1,
 	    "out_file"  		: "./logs/web_out.log",
 	    "error_file"   		: "./logs/web_err.log",
@@ -38,6 +38,6 @@ exports.servers = {
 
 exports.ports = {
 	'data': 	8100,
-	'api': 		8120,
-	'web': 		8140
+	'api': 		8200,
+	'launcher': 		8300
 };

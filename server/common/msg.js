@@ -213,7 +213,6 @@ exports.spawnSocket = (name, pmid, action = {}) => {
 	let curProcess 	 = pm2Config.servers[name] || {};
 	let instances 	 = (curProcess.instances || 1);
 	let port = pm2Config.ports[name] + (pmid % instances);
-
 	return Promise.resolve()
 	.then(() => {
 		socket.bind(port);

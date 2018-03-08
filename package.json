@@ -5,10 +5,10 @@
   "main": "product/app/luanch.js",
   "scripts": {
     "start": "node_modules/.bin/gulp && node_modules/.bin/pm2 kill && npm run data && npm run api && node_modules/.bin/pm2 logs",
-    "api": "node_modules/.bin/pm2 start product/server/launcher.js -- api",
+    "api": "node_modules/.bin/pm2 start product/server/launcher.js -- api,data",
     "web": "node_modules/.bin/pm2 start product/server/launcher.js -- web",
     "data": "node_modules/.bin/pm2 start product/server/launcher.js -- data",
-    "allup": "node_modules/.bin/gulp && node_modules/.bin/pm2 kill && npm run data && npm run api && node_modules/.bin/pm2 logs",
+    "allup": "node_modules/.bin/gulp && node_modules/.bin/pm2 kill && node_modules/.bin/pm2 start product/server/launcher.js -- api && node_modules/.bin/pm2 start product/server/launcher.js -- data && node_modules/.bin/pm2 logs",
     "stop": "node_modules/.bin/pm2 kill"
   },
   "keywords": [

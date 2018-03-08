@@ -17,7 +17,7 @@ var app 	 = koa();
 var systemApi 	 = koa();
 var systemRouter = router();
 var conf = {
-	apiPort: '80',
+	apiPort: '8084',
 	//serverAddress: '139.196.195.37'
 	serverAddress: '127.0.0.1'	
 };
