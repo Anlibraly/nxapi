@@ -57,7 +57,6 @@ Action.db.save = (req = {}, res) => {
 	mysql.save({ key, add, update, del })
 	.then(({ar, ur, dr}) => {
 		let result = helper.createSaveObject({map, ar, ur, dr});
-		console.log(333, result);
 		return Promise.resolve(result);
 	})
 	.then((result) => helper.cbResponse(result, res))
@@ -95,28 +94,6 @@ Action.db.query = (req = {}, res) => {
 		});
 
 		return Promise.resolve({list, page, size, total});
-	})
-	.then((result) => helper.cbResponse(result, res))
-	.catch((err)   => helper.cbCatch(err, res));
-};
-
-Action.db.queryFang = (req = {}, res) => {
-
-	let {
-		_fsize: fsize = {low: -1, high: -1},
-		_per_price: per_price = {low: -1, high: -1},
-		_total_price: total_price = {low: -1, high: -1},
-		_ftype: ftype = '',
-		_update: update = false,
-		_f_name: f_name = ''
-	} = req;
-
-	let query = {fsize, per_price, total_price, ftype, f_name};
-	
-	mysql.queryFang(query, update)
-	.then(({rows}) => {
-		let list = [];
-		return Promise.resolve({rows});
 	})
 	.then((result) => helper.cbResponse(result, res))
 	.catch((err)   => helper.cbCatch(err, res));

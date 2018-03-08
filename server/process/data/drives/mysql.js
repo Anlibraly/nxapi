@@ -7,7 +7,7 @@ var conf 	 = require('../../../common/settings');
 var pool = mysql.createPool({
 	host: conf.dbHost,
 	user: conf.dbUser,
-	password: base64.decode(base64.decode(conf.dbPassword)),
+	password: conf.dbPassword,
 	database: conf.dbName
 });
 pool.on('connection', () 	=> console.log('mysql pool connect'));
@@ -239,28 +239,6 @@ module.exports = {
 		})
 		.then(() => promisifyQuery(sql))
 		.then((rows) => ({rows, page, size, total}));
-	},
-
-	queryFang(query, update){
-		let sql = 'select ';
-		//sql += 'f._id,f.f_name,f.lou_id,f.tel_num,f.size,f.per_price,f.total_price,l.lou_name,l.type,l.alti,l.lont,l.lou_address ';
-		sql += 'f._id,f.f_name,f.size,f.total_price,l.lou_name,l.alti,l.lont ';
-		sql += 'from (select * from fang where 1=1 '
-		sql += updateSql('size', query.fsize, update);
-		sql += updateSql('per_price', query.per_price, update);
-		sql += updateSql('total_price', query.total_price, update);
-		sql += ') as f join (select * from lou where 1=1 '
-		if(query.ftype!=undefined && query.ftype.length > 0){
-			sql += `and type='${query.ftype}'`
-		}		
-		sql += ') as l on f.lou_id=l._id ';
-		if(query.f_name!=undefined && query.f_name.length > 0){
-			sql += `and (f.f_name like'%${query.f_name}%' or l.lou_name like'%${query.f_name}%') `;
-		}
-		sql += ' order by f.lou_id;';
-		return Promise.resolve()
-		.then(() => promisifyQuery(sql))
-		.then((rows) => ({rows}));
 	},
 
 	save({ key, add, update, del }){

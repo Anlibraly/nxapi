@@ -90,7 +90,7 @@ module.exports = ( router ) => {
 								};
 
 								return getThroughDataProc('db', 'save', {
-									_key: 'custom',
+									_key: 'userinfo',
 									_save: [user]
 								})
 								.then(() => {
