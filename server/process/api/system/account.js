@@ -1,4 +1,5 @@
 var msg = require('../../../common/msg');
+var request = require('request');
 var _   = require('underscore');
 var md5 = require('md5');
 
@@ -36,15 +37,29 @@ module.exports = ( router ) => {
 		};
 
 	})
-	.get('/account/getsession',function *(){
-
-		this.body = {
-			result : {type: this.session.type, id: this.session.userid},
-			res : {
-				status : true
-			}
-		};		
+	.get('/account/getOpenid/:code',function *(){
+		if(!this.params.code) {
+			this.body = {
+				result : 'invalid code',
+				res : {
+					status : false
+				}
+			};			
+		}
+		let url = `https://api.weixin.qq.com/sns/jscode2session?appid=wxc322fe742afc756b&secret=b0bb57153552e5b3144e7b71ffbecf90&js_code=${this.params.code}&grant_type=authorization_code`;
 		
+		request(url, (err, res, body) => {
+			if(err){
+				this.body = {
+					result : err,
+					res : {
+						status : false
+					}
+				};	
+			}
+
+			this.body = body;
+		});		
 	})
 	.get('/account/logout', function *() {
 		this.session.userid = null;
