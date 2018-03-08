@@ -44,7 +44,8 @@ module.exports = ( router ) => {
 				res : {
 					status : false
 				}
-			};			
+			};
+			return;			
 		}
 		let url = `https://api.weixin.qq.com/sns/jscode2session?appid=wxc322fe742afc756b&secret=b0bb57153552e5b3144e7b71ffbecf90&js_code=${this.params.code}&grant_type=authorization_code`;
 		
@@ -55,10 +56,12 @@ module.exports = ( router ) => {
 					res : {
 						status : false
 					}
-				};	
+				};
+				return;	
 			}
 
 			this.body = body;
+			return;
 		});		
 	})
 	.get('/account/logout', function *() {
