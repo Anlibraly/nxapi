@@ -37,7 +37,7 @@ module.exports = ( router ) => {
 		};
 
 	})
-	.get('/account/getOpenid/:code',function *(){
+	.get('/account/getUserInfo/:code',function *(){
 		if(!this.params.code) {
 			this.body = {
 				result : 'invalid code',
@@ -61,7 +61,47 @@ module.exports = ( router ) => {
 					};
 					resolve();	
 				}
-	
+
+				if(body.openid) {
+					getThroughDataProc('db', 'query', {
+						_key: 'userinfo',
+						openid: body.openid
+					})
+					.then((result) => {
+						let hasResult = (result.list && result.list.length);
+						let user = null;
+						if(hasResult && result.list[0]){
+							user = result.list[0];
+							this.session.userid = user._id;
+							this.session.openid = user.openid;
+							this.body = user;				
+						}else{
+							user = {
+								tel: '',
+								gender:	'男',
+								relation: '',
+								nickname: '',
+								birth:	'2010-01-01',
+								wxname:	'',
+								openid:	body.openid,
+								userdata:	''								
+							};
+							return getThroughDataProc('db', 'save', {
+								_key: 'custom',
+								_save: [user]
+							})
+							.then(() => (this.body = user));
+						}
+					})
+					.catch((err) => {
+						console.log(`[error] ${err.message}\n${err.stack}`)
+						this.body = {
+							code: -1,
+							desc: `[error] ${err.message}\n${err.stack}`
+						};			
+					});					
+				}
+
 				that.body = body;
 				resolve();
 			});	
