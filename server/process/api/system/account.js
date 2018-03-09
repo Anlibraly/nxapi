@@ -138,12 +138,13 @@ module.exports = ( router ) => {
 				if(hasResult && result.list[0]){
 					user = result.list[0];	
 				}
-				
+
 				user.birth = body.birth;
 				user.gender = body.gender;
 				user.nickname = body.nickname;
 				user.relation = body.relation;
 				user.wxname = body.wxname;
+				user.openid = body.openid;
 
 				return getThroughDataProc('db', 'save', {
 					_key: 'userinfo',
