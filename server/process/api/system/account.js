@@ -124,7 +124,7 @@ module.exports = ( router ) => {
 			});	
 		});	
 	})
-	.post('/admin/updateUserInfo',function *(){
+	.post('/account/updateUserInfo',function *(){
 		let body = this.request.body;
 
 		if(body.openid) {
