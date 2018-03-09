@@ -124,6 +124,43 @@ module.exports = ( router ) => {
 			});	
 		});	
 	})
+	.post('/admin/updateUserInfo',function *(){
+		let body = this.request.body;
+
+		if(body.openid) {
+			yield getThroughDataProc('db', 'query', {
+				_key: 'userinfo',
+				openid: body.openid
+			})
+			.then((result) => {
+				let hasResult = (result.list && result.list.length);
+				let user = null;
+				if(hasResult && result.list[0]){
+					user = result.list[0];
+					user.birth = body.birth;
+					user.gender = body.gender;
+					user.nickname = body.nickname;
+					user.relation = body.relation;
+
+					return getThroughDataProc('db', 'save', {
+						_key: 'userinfo',
+						_save: [user]
+					})
+					.then(() => {
+						that.body = {
+							code: 1,
+							user: user
+						};
+					});		
+				}
+			});
+		} else {
+			that.body = {
+				code: -1,
+				msg: 'invaild openid'
+			};
+		}
+	})
 	.get('/account/logout', function *() {
 		this.session.userid = null;
                 this.session.username = null;
