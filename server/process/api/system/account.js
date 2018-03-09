@@ -141,13 +141,14 @@ module.exports = ( router ) => {
 					user.gender = body.gender;
 					user.nickname = body.nickname;
 					user.relation = body.relation;
+					user.wxname = body.wxname;
 
 					return getThroughDataProc('db', 'save', {
 						_key: 'userinfo',
 						_save: [user]
 					})
 					.then(() => {
-						that.body = {
+						this.body = {
 							code: 1,
 							user: user
 						};
@@ -155,7 +156,7 @@ module.exports = ( router ) => {
 				}
 			});
 		} else {
-			that.body = {
+			this.body = {
 				code: -1,
 				msg: 'invaild openid'
 			};
