@@ -162,6 +162,51 @@ module.exports = ( router ) => {
 			};
 		}
 	})
+	.post('/account/updateAnswer',function *(){
+		let body = this.request.body;
+
+		if(body.openid) {
+			yield getThroughDataProc('db', 'query', {
+				_key: 'userinfo',
+				openid: body.openid
+			})
+			.then((result) => {
+				let hasResult = (result.list && result.list.length);
+				let user = null;
+				if(hasResult && result.list[0]){
+					user = result.list[0];
+					let oldata = JSON.parse(user.userdata ? user.userdata : '{}');
+					oldata = _.extend(oldata, body.ans);
+					user.userdata = JSON.stringify(oldata);
+
+					return getThroughDataProc('db', 'save', {
+						_key: 'eachdata',
+						_save: [{
+							openid: body.openid,
+							item: _.keys(body.ans)[0],
+							uptime: +new Date(),
+							data: JSON.stringify(body.ans)
+						}]
+					})
+					.then(() => getThroughDataProc('db', 'save', {
+						_key: 'userinfo',
+						_save: [user]
+					}))
+					.then(() => {
+						this.body = {
+							code: 1,
+							user: user
+						};
+					});		
+				}
+			});
+		} else {
+			this.body = {
+				code: -1,
+				msg: 'invaild openid'
+			};
+		}
+	})
 	.get('/account/logout', function *() {
 		this.session.userid = null;
                 this.session.username = null;
