@@ -165,7 +165,7 @@ module.exports = ( router ) => {
 	.post('/account/updateAnswer',function *(){
 		let body = this.request.body;
 
-		if(body.openid) {
+		if(body.openid && !_.isEmpty(body.ans)) {
 			yield getThroughDataProc('db', 'query', {
 				_key: 'userinfo',
 				openid: body.openid
@@ -203,7 +203,7 @@ module.exports = ( router ) => {
 		} else {
 			this.body = {
 				code: -1,
-				msg: 'invaild openid'
+				msg: 'invaild openid or invaild ans'
 			};
 		}
 	})
