@@ -134,26 +134,27 @@ module.exports = ( router ) => {
 			})
 			.then((result) => {
 				let hasResult = (result.list && result.list.length);
-				let user = null;
+				let user = {};
 				if(hasResult && result.list[0]){
-					user = result.list[0];
-					user.birth = body.birth;
-					user.gender = body.gender;
-					user.nickname = body.nickname;
-					user.relation = body.relation;
-					user.wxname = body.wxname;
-
-					return getThroughDataProc('db', 'save', {
-						_key: 'userinfo',
-						_save: [user]
-					})
-					.then(() => {
-						this.body = {
-							code: 1,
-							user: user
-						};
-					});		
+					user = result.list[0];	
 				}
+				
+				user.birth = body.birth;
+				user.gender = body.gender;
+				user.nickname = body.nickname;
+				user.relation = body.relation;
+				user.wxname = body.wxname;
+
+				return getThroughDataProc('db', 'save', {
+					_key: 'userinfo',
+					_save: [user]
+				})
+				.then(() => {
+					this.body = {
+						code: 1,
+						user: user
+					};
+				});	
 			});
 		} else {
 			this.body = {
