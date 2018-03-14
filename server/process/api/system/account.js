@@ -209,6 +209,75 @@ module.exports = ( router ) => {
 			};
 		}
 	})
+	.post('/account/uploadDlrecord',function *(){
+		let body = this.request.body;
+
+		if(body.openid && !_.isEmpty(body.dlRecord)) {
+			yield getThroughDataProc('db', 'query', {
+				_key: 'userinfo',
+				openid: body.openid
+			})
+			.then((result) => {
+				let hasResult = (result.list && result.list.length);
+				if(hasResult && result.list[0]){
+					return getThroughDataProc('db', 'save', {
+						_key: 'eachdata',
+						_save: [{
+							openid: body.openid,
+							item: 'dingliang',
+							uptime: +new Date(),
+							data: JSON.stringify(body.dlRecord)
+						}]
+					})
+					.then(() => {
+						this.body = {
+							code: 1,
+							msg: '上传成功！'
+						};
+					});		
+				}
+			});
+		} else {
+			this.body = {
+				code: -1,
+				msg: 'invaild openid or invaild ans'
+			};
+		}
+	})
+	.get('/account/getDlitems/:oid',function *(){
+		if(!this.params.oid) {
+			this.body = {
+				code: -1,
+				msg : 'invalid oid',
+			};
+			return;			
+		}
+		yield getThroughDataProc('db', 'query', {
+			_key: 'userinfo',
+			openid: body.openid
+		})
+		.then((result) => {
+			let hasResult = (result.list && result.list.length);
+			if(hasResult && result.list[0]){
+				return getThroughDataProc('db', 'query', {
+					_key: 'eachdata',
+					openid: body.openid
+				})
+				.then((dlr) => {
+					let hasResult = (dlr.list && dlr.list.length);
+					let items = [];
+					if(hasResult) {
+						items = dlr.list;
+					}
+
+					this.body = {
+						code: 1,
+						items
+					};
+				});		
+			}
+		});
+	})	
 	.get('/account/logout', function *() {
 		this.session.userid = null;
                 this.session.username = null;
