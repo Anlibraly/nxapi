@@ -266,7 +266,8 @@ module.exports = ( router ) => {
 			if(hasResult && result.list[0]){
 				return getThroughDataProc('db', 'query', {
 					_key: 'eachdata',
-					openid: this.params.oid
+					openid: this.params.oid,
+					item: 'dingliang'
 				})
 				.then((dlr) => {
 					let hasResult = (dlr.list && dlr.list.length);
