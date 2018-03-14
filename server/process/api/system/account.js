@@ -231,7 +231,8 @@ module.exports = ( router ) => {
 					})
 					.then(() => getThroughDataProc('db', 'query', {
 						_key: 'eachdata',
-						openid: body.openid
+						openid: body.openid,
+						item: 'dingliang'
 					}))
 					.then((dlr) => {
 						this.body = {
