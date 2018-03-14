@@ -229,12 +229,16 @@ module.exports = ( router ) => {
 							data: JSON.stringify(body.dlRecord)
 						}]
 					})
-					.then(() => {
+					.then(() => getThroughDataProc('db', 'query', {
+						_key: 'eachdata',
+						openid: body.openid
+					}))
+					.then((dlr) => {
 						this.body = {
 							code: 1,
-							msg: '上传成功！'
+							items: dlr.list
 						};
-					});		
+					});	
 				}
 			});
 		} else {
@@ -254,14 +258,14 @@ module.exports = ( router ) => {
 		}
 		yield getThroughDataProc('db', 'query', {
 			_key: 'userinfo',
-			openid: body.openid
+			openid: this.params.oid
 		})
 		.then((result) => {
 			let hasResult = (result.list && result.list.length);
 			if(hasResult && result.list[0]){
 				return getThroughDataProc('db', 'query', {
 					_key: 'eachdata',
-					openid: body.openid
+					openid: this.params.oid
 				})
 				.then((dlr) => {
 					let hasResult = (dlr.list && dlr.list.length);
